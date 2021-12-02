@@ -30,6 +30,18 @@ board1 = [[9, 'X', 4, 'X', 'X', 'X', 6, 'X', 'X'],  # 0
           ['X', 'X', 'X', 4, 'X', 8, 3, 1, 'X'],  # 7
           ['X', 5, 'X', 'X', 'X', 'X', 4, 'X', 'X']]  # 8
 
+
+board2 = [['X', 'X', 4, 'X', 'X', 'X', 6, 'X', 'X'],  # 0
+          ['X', 'X', 'X', 9, 'X', 'X', 'X', 7, 'X'],  # 1
+          [5, 6, 'X', 'X', 4, 3, 'X', 'X', 'X', ],  # 2
+          [1, 7, 5, 6, 'X', 4, 2, 'X', 9],  # 3
+          ['X', 3, 'X', 'X', 'X', 'X', 7, 'X', 8],  # 4
+          [4, 'X', 8, 3, 7, 2, 1, 'X', 6],  # 5
+          ['X', 'X', 1, 'X', 9, 7, 'X', 6, 'X', ],  # 6
+          ['X', 'X', 'X', 4, 'X', 8, 3, 1, 'X'],  # 7
+          ['X', 5, 'X', 'X', 'X', 'X', 4, 'X', 'X']]  # 8
+
+
 badboard = [[8, 3, 1, 6, 'X', 'X', 5, 'X', 'X'],
             ['X', 4, 9, 5, 'X', 1, 8, 2, 7],
             [2, 5, 'X', 9, 'X', 'X', 'X', 'X', 3],
@@ -58,6 +70,8 @@ def checkBoard(lol):
 
 # checks whether or not a number is in a list this function can be used to see if a number is in a row or column IF
 # the column has been created
+
+
 def checkList(num, l):
     if num in l:
         return True
@@ -129,21 +143,21 @@ def gridHelp(row, col, board):
 
 def findGrid(posX, posY):
     gridN = int
-    if (posX < 3) and (posY < 3):
+    if (posY < 3) and (posX < 3):
         gridN = 0
-    elif (3 <= posX < 6) and (posY < 3):
+    elif (3 <= posY < 6) and (posX < 3):
         gridN = 1
-    elif (posX >= 6) and (posY < 3):
+    elif (posY >= 6) and (posX < 3):
         gridN = 2
-    elif (posX < 3) and (3 <= posY < 6):
+    elif (posY < 3) and (3 <= posX < 6):
         gridN = 3
-    elif (3 <= posX < 6) and (3 <= posY < 6):
+    elif (3 <= posY < 6) and (3 <= posX < 6):
         gridN = 4
-    elif (posX >= 6) and (3 <= posY < 6):
+    elif (posY >= 6) and (3 <= posX < 6):
         gridN = 5
-    elif (posX < 3) and (posY >= 6):
+    elif (posY < 3) and (posX >= 6):
         gridN = 6
-    elif (3 <= posX < 6) and (posY >= 6):
+    elif (3 <= posY < 6) and (posX >= 6):
         gridN = 7
     else:
         gridN = 8
@@ -171,7 +185,7 @@ testBoard = Board(board1)
 
 # A tile contains a score and a possible list of numbers
 class Tile:
-    def __init__(self, score=9, posN=[1, 2, 3, 4, 5, 7, 8, 9], posX=0, posY=0, full=False):
+    def __init__(self, score=9, posN=[1, 2, 3, 4, 5, 6, 7, 8, 9], posX=0, posY=0, full=False):
         self.score = score
         self.posN = posN
         self.posX = posX
@@ -206,23 +220,23 @@ def createTiles(board):
 
 
 def numElim(posN, l):
+    nums = list(posN)
     for x in range(9):
         num = x + 1
         if checkList(num, l):
-            if num in posN:
-                posN.remove(num)
-    return posN
+            if num in nums:
+                nums.remove(num)
+    return nums
 
 
 def tileElim(Tile, board):
-    posN = Tile.posN
-    #if isinstance(posN, list):
-    #    posN = numElim(posN, board[Tile.posX])
-    #    col = makeCol(Tile.posY, board)
-     #   posN = numElim(Tile.posN, col)
-    #   gridN = findGrid(Tile.posX, Tile.posY)
-      #  grid = makeGrid(gridN, board)
-    #    posN = numElim(posN, grid)
+    posN = list(Tile.posN)
+    posN = numElim(posN, board[Tile.posX])
+    col = makeCol(Tile.posY, board)
+    posN = numElim(posN, col)
+    gridN = findGrid(Tile.posX, Tile.posY)
+    grid = makeGrid(gridN, board)
+    posN = numElim(posN, grid)
     return posN
 
 
@@ -233,21 +247,37 @@ def tileScore(lon):
 
 
 def Solve(board):
+    tempBoard = board
     counter = 0
     # first we prepare the board
-    tileBoard = createTiles(board)
+
     # now we cycle through the board one tile at a time trying to eliminate numbers from possible
-    for x in tileBoard:
+    while checkSolve(tempBoard):
+        tileBoard = createTiles(tempBoard)
+        for x in tileBoard:
+            for y in x:
+                if y.full == True:
+                    print(str(y.posX), str(y.posY) + " already full")
+                else:
+                    nums = y.posN
+                    nums = tileElim(y,tempBoard)
+                    print(str(y.posX), str(y.posY) + " " + str(nums))
+                    if len(nums) == 1:
+                        print("nums" + str(nums))
+                        tempBoard[y.posX][y.posY] = nums[0]
+                        print("pasting number " + str(nums[0]))
+                    y.full = True
+        counter = counter + 1
+        print("board # ", str(counter), tempBoard)
+    return tempBoard
+
+def checkSolve(board):
+    for x in board:
         for y in x:
-            print("y.posN " + str(y.posN))
-            nums = y.posN
-            nums = tileElim(y,board)
-            #.posN = nums
-            counter = counter + 1
-            print(str(counter) + " " + str(nums))
-            # y.posN = [1,2,3,4,5,6,7,8,9]
-            # print("end " + str(y.posN))
-            y.posN.remove(1)
+            if y == 'X':
+                return False
+            else:
+                return True
 
 
 print(Solve(board1))
