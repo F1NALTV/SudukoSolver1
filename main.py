@@ -50,12 +50,11 @@ def checkBoard(lol):
         if len(x) == 9:
             j = j + 1
     if j == 9:
-        return True
         print("Correct input")
+        return True
     else:
-        return False
         print("Incorrect input")
-
+        return False
 
 # checks whether or not a number is in a list this function can be used to see if a number is in a row or column IF
 # the column has been created
@@ -82,6 +81,7 @@ def makeRow(row, board):
 
 
 # this function will Create a specified grid from a board this could probably be shortened but this works
+# somehow this does work not sure how or why bc the gridHelp function looks wrong but returns the right values
 def makeGrid(gridN, board):
     if gridN == 0:
         return gridHelp(-1, -1, board)
@@ -110,6 +110,9 @@ def makeGrid(gridN, board):
     elif gridN == 8:
         return gridHelp(5, 5, board)
 
+# does this work? why is row1 here?
+# this works idk why it works but it does
+# it really doesn't look like it should and i don't remember writing it but it works
 
 def gridHelp(row, col, board):
     grid = []
@@ -163,12 +166,6 @@ class Board:
         self.board = board
 
 
-
-
-
-
-
-
 testBoard = Board(board1)
 
 
@@ -181,21 +178,33 @@ class Tile:
         self.posY = posY
         self.full = full
 
-    def createTiles(self, board):
-        numX = -1
-        for x in board:
-            numX = numX + 1
-            numY = -1
-            for y in x:
-                numY = numY + 1
-                name = "A" + str(numX) + str(numY)
-                name = Tile()
-                name.posX = numX
-                name.posY = numX
-                print("Tile Name" +str(name)+"PosX = "+str(name.posX)+" PosY = "+str(name.posY))
 
-TestTiles = Tile()
-TestTiles.createTiles(board1)
+def createTiles(board):
+    newBoard = []
+    numX = -1
+    for x in board:
+        numX = numX + 1
+        numY = -1
+        row = []
+        for y in x:
+            numY = numY + 1
+            name = "A" + str(numX) + str(numY)
+            name = Tile()
+            name.posX = numX
+            name.posY = numY
+            # print("Tile Name" + str(name) + "PosX = " + str(name.posX) + " PosY = " + str(name.posY))
+            if isinstance(y,int):
+                name.full = True
+                name.score = 0
+                name.posN = None
+            row.append(name)
+        newBoard.append(row)
+    return newBoard
+
+
+
+
+
 def numElim(posN, l):
     for x in range(9):
         num = x + 1
@@ -206,23 +215,39 @@ def numElim(posN, l):
 
 
 def tileElim(Tile, board):
-    Tile.posN = numElim(Tile.posN, board[Tile.posX])
-    col = makeCol(Tile.posY, board)
-    Tile.posN = numElim(Tile.posN, col)
-    gridN = findGrid(Tile.posX, Tile.posY)
-    grid = makeGrid(gridN, board)
-    Tile.posN = numElim(Tile.posN, grid)
-    return Tile.posN
+    posN = Tile.posN
+    #if isinstance(posN, list):
+    #    posN = numElim(posN, board[Tile.posX])
+    #    col = makeCol(Tile.posY, board)
+     #   posN = numElim(Tile.posN, col)
+    #   gridN = findGrid(Tile.posX, Tile.posY)
+      #  grid = makeGrid(gridN, board)
+    #    posN = numElim(posN, grid)
+    return posN
+
 
 def tileScore(lon):
-    return len(lon)+1
-
-
-A1 = Tile()
-A1.posY = 1
-A1.posX = 1
-
-#def Solve(board):
+    return len(lon) + 1
 
 
 
+
+def Solve(board):
+    counter = 0
+    # first we prepare the board
+    tileBoard = createTiles(board)
+    # now we cycle through the board one tile at a time trying to eliminate numbers from possible
+    for x in tileBoard:
+        for y in x:
+            print("y.posN " + str(y.posN))
+            nums = y.posN
+            nums = tileElim(y,board)
+            #.posN = nums
+            counter = counter + 1
+            print(str(counter) + " " + str(nums))
+            # y.posN = [1,2,3,4,5,6,7,8,9]
+            # print("end " + str(y.posN))
+            y.posN.remove(1)
+
+
+print(Solve(board1))
