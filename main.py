@@ -128,6 +128,7 @@ def makeGrid(gridN, board):
 # this works idk why it works but it does
 # it really doesn't look like it should and i don't remember writing it but it works
 
+
 def gridHelp(row, col, board):
     grid = []
     row1 = row
@@ -231,13 +232,70 @@ def numElim(posN, l):
 
 def tileElim(Tile, board):
     posN = list(Tile.posN)
-    posN = numElim(posN, board[Tile.posX])
     col = makeCol(Tile.posY, board)
-    posN = numElim(posN, col)
     gridN = findGrid(Tile.posX, Tile.posY)
     grid = makeGrid(gridN, board)
+    posN = numElim(posN, board[Tile.posX])
+    posN = numElim(posN, col)
     posN = numElim(posN, grid)
+    #rowPosN = numElim(posN, board[Tile.posX])
+    #colPosN = numElim(posN, col)
+    #gridPosN = numElim(posN, grid)
+   # for x in posN:
+    #    if x in rowPosN and (not (x in colPosN) or (x in gridPosN)):
+     #       advPosN = [x]
+      #      return advPosN
+      #  elif x in colPosN and (not (x in rowPosN) or (x in gridPosn)):
+       #     advPosN = [x]
+        #    return advPosN
+        #elif x in gridPosN and (not (x in rowPosN) or (x in colPosN)):
+         #   advPosN = [x]
+          #  return advPosN
     return posN
+
+
+def otherCheck(tile, tileBoard, board, posN):
+    #posN = list(tile.posN)
+    rowPosN = rowList(tile.posX, tileBoard, board)
+    colPosN = columnList(tile.posY, tileBoard, board)
+    gridPosN = gridList(findGrid(tile.posX,tile.posY), tileBoard, board)
+    for x in posN:
+        if x in rowPosN and (not (x in colPosN) or (x in gridPosN)):
+            advPosN = [x]
+            return advPosN
+        elif x in colPosN and (not (x in rowPosN) or (x in gridPosn)):
+            advPosN = [x]
+            return advPosN
+        elif x in gridPosN and (not (x in rowPosN) or (x in colPosN)):
+            advPosN = [x]
+            return advPosN
+
+def columnList(col, tileBoard, board):
+    for x in makeCol(col, tileBoard):
+        if x.full:
+            pass
+        else:
+            return(tileElim(x,board))
+
+
+def rowList(row, tileBoard, board):
+    for x in makeRow(row, tileBoard):
+        if x.full:
+            pass
+        else:
+            return(tileElim(x,board))
+
+
+def gridList(gridN, tileBoard, board):
+    for x in makeGrid(gridN, tileBoard):
+        if x.full:
+            pass
+        else:
+            return(tileElim(x,board))
+
+
+
+
 
 
 def tileScore(lon):
@@ -256,12 +314,13 @@ def Solve(board):
         tileBoard = createTiles(tempBoard)
         for x in tileBoard:
             for y in x:
-                if y.full == True:
+                if y.full:
                     print(str(y.posX), str(y.posY) + " already full")
                 else:
                     nums = y.posN
                     nums = tileElim(y,tempBoard)
                     print(str(y.posX), str(y.posY) + " " + str(nums))
+                    nums = otherCheck(y, tileBoard, board, nums)
                     if len(nums) == 1:
                         print("nums" + str(nums))
                         tempBoard[y.posX][y.posY] = nums[0]
