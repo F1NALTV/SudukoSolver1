@@ -229,7 +229,7 @@ def numElim(posN, l):
                 nums.remove(num)
     return nums
 
-
+#test
 def tileElim(Tile, board):
     posN = list(Tile.posN)
     col = makeCol(Tile.posY, board)

@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e475a22-60ee-4a42-8ad2-bb3c768ad63e" name="Changes" comment="added more rules but needs fixed it wasn't implented correctly and quite frankly just makes the code messy and it doesn't work.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="2e475a22-60ee-4a42-8ad2-bb3c768ad63e" name="Changes" comment="RE-UPLOAD" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638549936482</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="RE-UPLOAD">
+      <created>1638813020251</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1638813020251</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -163,7 +168,8 @@
     <MESSAGE value="fixed errors but created more" />
     <MESSAGE value="fixed alot of errors and it solves some tiles need to add more rules" />
     <MESSAGE value="added more rules but needs fixed it wasn't implented correctly and quite frankly just makes the code messy and it doesn't work." />
-    <option name="LAST_COMMIT_MESSAGE" value="added more rules but needs fixed it wasn't implented correctly and quite frankly just makes the code messy and it doesn't work." />
+    <MESSAGE value="RE-UPLOAD" />
+    <option name="LAST_COMMIT_MESSAGE" value="RE-UPLOAD" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
