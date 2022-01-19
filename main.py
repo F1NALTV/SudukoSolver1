@@ -178,10 +178,6 @@ def gridPos(gridN, pos):
         cord = [cord[0] + 6, cord[1] + 6]
         return cord
 
-
-
-
-
 def findGrid(posX, posY):
     gridN = int
     if (posY < 3) and (posX < 3):
@@ -344,19 +340,16 @@ def soloListCheck(LoL):
 # the goal of this check is to place a number if it is the only place that number can go
 # eg a 3 will be placed in a grid if it is the only number not placed in that grid.
 def otherCheck(tile, tileBoard, board):
-    #posN = list(posN)
-    #rowPosN = rowList(tile.posX, tileBoard, board)
-    # produces  list of lists inner list contains all posN for every tile in the row
-    #colPosN = columnList(tile.posY, tileBoard, board)
-    #gridPosN = gridList(findGrid(tile.posX, tile.posY), tileBoard, board)
+    posN = tileElim(tile,board)
+    num = int
     grid = makeGrid(findGrid(tile.posX, tile.posY), tileBoard)
     lol = []
     for tile in grid:
         if tile.full:
             lol.append(["x"])
+            pass
         else:
             lol.append(tileElim(tile,board))
-    #print(lol)
     for x in range(1,10):
         c = 0
         for l in lol:
@@ -367,27 +360,12 @@ def otherCheck(tile, tileBoard, board):
             #print("the number is " + str(x))
             num = x
             break
-    count = -1
-    for l in lol:
-        count = count + 1
-        if x in l:
-            #print(count)
-            break
-    #print("othercheck", str(x), str(count))
-    return [x, count]
+    if num in posN:
+        return num
+    else:
+        return None
 
 
-    #    if  isIn(x,rowPosN) and (not ((isIn(x, colPosN) or (isIn(x, gridPosN))))):
-    #        advPosN = [x]
-    #        return advPosN
-    #    elif  isIn(x, colPosN) and (not ((isIn(x,rowPosN) or (isIn(x,gridPosN))))):
-    #        advPosN = [x]
-    #        return advPosN
-    #    elif isIn(x, gridPosN) and (not (isIn(x,rowPosN) or (isIn(x,colPosN)))):
-    #        advPosN = [x]
-    #        return advPosN
-
-    # return posN
 
 
 def columnList(col, tileBoard, board):
@@ -437,56 +415,45 @@ def Solve(board):
                 if y.full:
                     print(str(y.posX), str(y.posY) + " already full with "+ str(y.posN))
                 else:
-                    nums = y.posN
                     nums = tileElim(y, board) #was tempboard i changed it if it doesn't work thisis why
                     print(str(y.posX), str(y.posY) + " " + str(nums))
-                    nums2 = otherCheck(y,tileBoard, board)
-                    #print("nums 2 " + str(nums2))
-                    gridN=findGrid(y.posX, y.posY)
-                    #print("it is is in " + str(gridN))
-                    #print(list(gridPos(gridN,nums2[1])))
-                    posX = list(gridPos(gridN,nums2[1]))[0]
-                    posY = list(gridPos(gridN, nums2[1]))[1]
-                    #print(posX,posY)
-                    sol = nums2[0]
-                    tempBoard[posX][posY] = sol
-                    print
-                       #if nums2 in nums:
-                       # nums = nums2
                     if len(nums) == 1:
                         print("nums" + str(nums))
                         tempBoard[y.posX][y.posY] = nums[0]
                         print("pasting number " + str(nums[0]))
                         y.full = True
                         break
-                   # nums2 = otherCheck(y, tileBoard, board)
-
-                   # if nums2 is not None:
-                    #    print("nums2" +str(nums2))
-                     #   tempBoard[y.posX][y.posY] = nums2[0]
-                      #  print("pasting number " + str(nums2[0]))
-                       # y.full = True
-                        #break
-
+                    nums2 = otherCheck(y,tileBoard,tempBoard)
+                    if isinstance(nums2,int):
+                        tempBoard[y.posX][y.posY] = nums2
+                        print("pasting number from otherCheck " + str(nums2))
+                        y.full = True
+                        break
         counter = counter + 1
-        print("board # ", str(counter), tempBoard)
+        #print("board #", str(counter), tempBoard)
+    printBoard(tempBoard)
     return tempBoard
 
 
 def checkSolve(board):
-    for x in board:
-        for y in x:
-            if y == 'X':
-                return False
-            else:
-                return True
+    if "X" in (item for sublist in board for item in sublist):
+        return True
+    else:
+        return False
+
+def printBoard(board):
+    c = 0
+    for row in board:
+        if c%3 == 0 and c!= 0:
+            print("--------------------------")
+            print(row)
+            c = c + 1
+        else:
+            print(row)
+            c = c + 1
 
 
-def isIn(x, list):
-    for i in list:
-        if x in i:
-            return True
-    return False
+
 
 
 print(Solve(board1))
